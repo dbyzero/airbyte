@@ -628,11 +628,13 @@ public class AirbyteAcceptanceTestHarness {
     dbConfig.put(JdbcUtils.PORT_KEY, psql.getFirstMappedPort());
     dbConfig.put(JdbcUtils.DATABASE_KEY, psql.getDatabaseName());
     dbConfig.put(JdbcUtils.USERNAME_KEY, psql.getUsername());
+    // todo, edit comments and remove the strict enforce stuff in this test harness
     // Some database docker images labeled strict-enforce do not contain an option to ssl off, so it is
     // not included in the schema.
     if (!strictEnforce) {
-      dbConfig.put(JdbcUtils.SSL_KEY, false);
+      dbConfig.put("is_test", true);
     }
+    dbConfig.put(JdbcUtils.SSL_KEY, false);
 
     if (withSchema) {
       dbConfig.put(JdbcUtils.SCHEMA_KEY, "public");
