@@ -29,6 +29,11 @@ public class PostgresSourceStrictEncrypt extends SpecModifyingSource implements 
 
   @Override
   public ConnectorSpecification modifySpec(final ConnectorSpecification originalSpec) {
+    // do not enforce ssl for tests
+    if (originalSpec.getConnectionSpecification().get("properties").get("is_test").booleanValue()) {
+      return originalSpec;
+    }
+
     final ConnectorSpecification spec = Jsons.clone(originalSpec);
     ((ObjectNode) spec.getConnectionSpecification().get("properties")).remove(JdbcUtils.SSL_KEY);
     final ArrayNode modifiedSslModes = spec.getConnectionSpecification().get("properties").get("ssl_mode").get("oneOf").deepCopy();
